@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        /* Dark Theme Styles */
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Navbar */
+        nav {
+            background: #161b22;
+            width: 100%;
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #c9d1d9;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        nav ul li a:hover, .active {
+            background: #30363d;
+        }
+
+        nav ul li .logout {
+            color: #ff7b72;
+        }
+
+        /* Profile Card */
+        .container {
+            margin-top: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+        }
+
+        .profile-card {
+            background: #161b22;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-card h2 {
+            color: #58a6ff;
+        }
+
+        .profile-card p {
+            color: #8b949e;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #ff7b72;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #d73a49;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/profile" class="active">Profile</a></li>
+                <li><a href="/logout" class="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="profile-card">
+            <h2>Welcome, <%= user.username %>!</h2>
+            <p>Email: <%= user.email %></p>
+            <p>Account Created: <%= user.created_at %></p>
+            <a href="/logout" class="btn logout-btn">Logout</a>
+        </div>
+    </main>
+</body>
+</html>
