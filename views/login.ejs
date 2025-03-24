@@ -4,55 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
     <style>
+        /* Dark Theme Styles */
         body {
-            background-color: #0f172a; /* Dark background */
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: #161b22;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #58a6ff;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #30363d;
+            border-radius: 5px;
+            background: #0d1117;
+            color: #c9d1d9;
+        }
+
+        input:focus {
+            border-color: #58a6ff;
+            outline: none;
+        }
+
+        .btn {
+            background: #238636;
+            color: #fff;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #2ea043;
+        }
+
+        /* Error Popup */
+        .error-popup {
+            background: #ff7b72;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .error-popup.show {
+            display: block;
+        }
+
+        p {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-gray-800 text-white p-8 rounded-2xl shadow-lg w-96">
-        <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
+    <% if (error) { %>
+        <div class="error-popup" id="errorPopup"><%= error %></div>
+    <% } %>
 
-        <form action="/auth/login" method="POST" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium">Username or Email</label>
-                <input type="text" name="username" required 
-                    class="w-full mt-1 px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
+    <div class="form-container">
+        <h2>Login</h2>
+        <form action="/auth/login" method="POST">
+            <label>Username or Email:</label>
+            <input type="text" name="username" required>
 
-            <div>
-                <label class="block text-sm font-medium">Password</label>
-                <input type="password" name="password" required 
-                    class="w-full mt-1 px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
+            <label>Password:</label>
+            <input type="password" name="password" required>
 
             <!-- Google reCAPTCHA -->
-            <div class="mt-4 flex justify-center">
-                <div class="g-recaptcha" data-sitekey="<%= process.env.RECAPTCHA_SITE_KEY %>"></div>
-            </div>
+            <div class="g-recaptcha" data-sitekey="<%= process.env.RECAPTCHA_SITE_KEY %>"></div>
 
-            <button type="submit"
-                class="w-full mt-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition">
-                Login
-            </button>
+            <br><br>
+            <button type="submit" class="btn">Login</button>
         </form>
-
-        <p class="mt-4 text-center text-sm text-gray-400">
-            Don't have an account? 
-            <a href="/auth/register" class="text-indigo-400 hover:text-indigo-300 transition">Register here</a>
-        </p>
+        <p>Don't have an account? <a href="/auth/register">Register here</a></p>
     </div>
+
+    <script>
+        // Show error message for a few seconds and then fade out
+        window.onload = function() {
+            const errorPopup = document.getElementById("errorPopup");
+            if (errorPopup) {
+                errorPopup.classList.add("show");
+                setTimeout(() => {
+                    errorPopup.classList.remove("show");
+                }, 3000); // Hide after 3 seconds
+            }
+        };
+    </script>
 
 </body>
 </html>

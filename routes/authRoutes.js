@@ -5,12 +5,12 @@ const router = express.Router();
 
 // Serve the login page
 router.get("/login", (req, res) => {
-  res.render("login", { siteKey: process.env.RECAPTCHA_SITE_KEY });
+  res.render("login", { siteKey: process.env.RECAPTCHA_SITE_KEY, error:null });
 });
 
 // Serve the registration page
 router.get("/register", (req, res) => {
-  res.render("register");
+  res.render("register", {error:null});
 });
 
 router.post("/register", registerUser);

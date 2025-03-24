@@ -41,6 +41,7 @@ app.get("/logout", (req, res) => {
   res.clearCookie("token");
   res.redirect("/auth/login");
 });
+app.get("*", (req, res)=>{res.send("404, Page Not Found!")});
 
 // Start Server
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

@@ -7,14 +7,17 @@ exports.registerUser = async (req, res) => {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
-    return res.status(400).send("All fields are required.");
+    return res.render("register", { error: "All fields are required." });
   }
 
   try {
     // Check if email or username already exists
-    const existingUser = await pool.query("SELECT * FROM users WHERE email = $1 OR username = $2", [email, username]);
+    const existingUser = await pool.query(
+      "SELECT * FROM users WHERE email = $1 OR username = $2",
+      [email, username]
+    );
     if (existingUser.rows.length > 0) {
-      return res.status(400).send("Username or Email already exists.");
+      return res.render("register", { error: "Username or Email already exists." });
     }
 
     // Hash password
@@ -29,15 +32,16 @@ exports.registerUser = async (req, res) => {
     res.redirect("/auth/login");
   } catch (error) {
     console.error(error);
-    res.status(500).send("Server error. Please try again later.");
+    res.render("register", { error: "Server error. Please try again later." });
   }
 };
+
 
 exports.loginUser = async (req, res) => {
   const { username, password, "g-recaptcha-response": recaptchaToken } = req.body;
 
   if (!username || !password || !recaptchaToken) {
-    return res.status(400).send("All fields are required.");
+    return res.render("login", { error: "All fields are required." });
   }
 
   try {
@@ -54,7 +58,7 @@ exports.loginUser = async (req, res) => {
     );
 
     if (!recaptchaResponse.data.success) {
-      return res.status(400).send("Invalid reCAPTCHA. Please try again.");
+      return res.render("login", { error: "Invalid reCAPTCHA. Please try again." });
     }
 
     // Check if user exists
@@ -62,18 +66,17 @@ exports.loginUser = async (req, res) => {
       "SELECT * FROM users WHERE username = $1 OR email = $1",
       [username]
     );
-    
+
     if (userQuery.rows.length === 0) {
-      return res.status(400).send("Invalid username or password.");
+      return res.render("login", { error: "Invalid username or password." });
     }
-    
 
     const user = userQuery.rows[0];
 
     // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).send("Invalid username or password.");
+      return res.render("login", { error: "Invalid username or password." });
     }
 
     // Generate JWT
@@ -83,11 +86,12 @@ exports.loginUser = async (req, res) => {
       { expiresIn: "15m" }
     );
 
-    // Set cookie and respond
+    // Set cookie and redirect to profile
     res.cookie("token", token, { httpOnly: true });
     res.redirect("/profile");
   } catch (error) {
     console.error(error);
-    res.status(500).send("Server error. Please try again later.");
+    res.render("login", { error: "Server error. Please try again later." });
   }
 };
+
